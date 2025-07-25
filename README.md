@@ -1,4 +1,4 @@
-# Docker and NVIDIA Container Toolkit Installation Guide
+# Gyrus AI Docker Installation Guide
 
 This guide provides step-by-step instructions for installing Docker and configuring it to use NVIDIA GPUs on an Ubuntu-based system. This setup is essential for running GPU-accelerated applications in a containerized environment.
 
