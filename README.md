@@ -25,19 +25,19 @@ These commands will set up Docker's official apt repository and install the Dock
 
 ### 2.1. Set Up the Repository
 
-# Update the apt package index and install packages to allow apt to use a repository over HTTPS
+Update the apt package index and install packages to allow apt to use a repository over HTTPS
 ```bash
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 ```
 
-# Add Docker’s official GPG key
+Add Docker’s official GPG key
 ```
 sudo curl -fsSL [https://download.docker.com/linux/ubuntu/gpg](https://download.docker.com/linux/ubuntu/gpg) -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 ```
-# Set up the repository
+Set up the repository
 ```
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] [https://download.docker.com/linux/ubuntu](https://download.docker.com/linux/ubuntu) \
