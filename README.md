@@ -78,4 +78,35 @@ Update the package list
 sudo apt-get update
 ```
 
+### 3.2. Install the Toolkit and Configure Docker
+Install the NVIDIA container toolkit
+```
+sudo apt-get install -y nvidia-container-toolkit
+```
+Configure the Docker daemon to recognize the NVIDIA runtime
+```
+sudo nvidia-ctk runtime configure --runtime=docker
+```
+
+Restart the Docker service to apply the changes
+```
+sudo systemctl restart docker
+```
+
+# Step 4: Post-Installation Steps (Permissions)
+Configure Docker to run without sudo. This is a recommended security practice that avoids running Docker commands as the root user.
+
+Create the 'docker' group (may already exist)
+```
+sudo groupadd docker
+```
+Add your user to the 'docker' group
+```
+sudo usermod -aG docker $USER
+```
+Apply the new group membership to the current session
+Note: For this change to take full effect, you may need to log out and log back in.
+```
+newgrp docker
+```
 
