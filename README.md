@@ -50,7 +50,7 @@ echo \
   $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
-### Install Docker Packages
+### 2.2 Install Docker Packages
 Update the apt package index again
 ```
 sudo apt-get update
@@ -60,3 +60,22 @@ Install Docker Engine, CLI, containerd, and plugins
 ```
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
+## Step 3: Install NVIDIA Container Toolkit
+This toolkit allows Docker containers to access the host's NVIDIA GPU hardware.
+
+### 3.1. Set Up the NVIDIA Repository
+
+Add the NVIDIA package repository and GPG key
+
+```
+curl -fsSL [https://nvidia.github.io/libnvidia-container/gpgkey](https://nvidia.github.io/libnvidia-container/gpgkey) | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L [https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list](https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list) | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+```
+Update the package list
+```
+sudo apt-get update
+```
+
+
