@@ -130,5 +130,11 @@ docker run --gpus all --privileged -p 5800:5800  -v /path/to/mounting_dir:/work_
 
 These are arguments passed to the application running inside the container.
 
+# Optional Step Root drive permission error
+If you do not have permission to mounting directory then use the following command
+```
+sudo chown -R $USER:$USER directory
+```
+
 
 
