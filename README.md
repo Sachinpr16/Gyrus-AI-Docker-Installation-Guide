@@ -1,2 +1,57 @@
-# Gyrus-AI-Docker-Installation-Guide
-This Repo is  a step by step guide to have docker setup and commands to run Gyrus AI docker images 
+# Gyrus AI Docker Guide
+Docker and NVIDIA Container Toolkit Installation GuideThis guide provides step-by-step instructions for installing Docker and configuring it to use NVIDIA GPUs on an Ubuntu-based system. This setup is essential for running GPU-accelerated applications in a containerized environment.PrerequisitesAn Ubuntu-based Linux distribution.An NVIDIA GPU with the appropriate proprietary drivers already installed.sudo privileges.Step 1: Uninstall Old Docker Versions (Cleanup)To prevent conflicts, it's best to start by removing any old or unofficial Docker packages from your system.for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do 
+  sudo apt-get remove -y $pkg
+done
+Step 2: Install Docker EngineThese commands will set up Docker's official apt repository and install the Docker Engine.2.1. Set Up the Repository# Update the apt package index and install packages to allow apt to use a repository over HTTPS
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+
+# Add Docker’s official GPG key
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Set up the repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+2.2. Install Docker Packages# Update the apt package index again
+sudo apt-get update
+
+# Install Docker Engine, CLI, containerd, and plugins
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+Step 3: Install NVIDIA Container ToolkitThis toolkit allows Docker containers to access the host's NVIDIA GPU hardware.3.1. Set Up the NVIDIA Repository# Add the NVIDIA package repository and GPG key
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+# Update the package list
+sudo apt-get update
+3.2. Install the Toolkit and Configure Docker# Install the NVIDIA container toolkit
+sudo apt-get install -y nvidia-container-toolkit
+
+# Configure the Docker daemon to recognize the NVIDIA runtime
+sudo nvidia-ctk runtime configure --runtime=docker
+
+# Restart the Docker service to apply the changes
+sudo systemctl restart docker
+Step 4: Post-Installation Steps (Permissions)Configure Docker to run without sudo. This is a recommended security practice that avoids running Docker commands as the root user.# Create the 'docker' group (may already exist)
+sudo groupadd docker
+
+# Add your user to the 'docker' group
+sudo usermod -aG docker $USER
+
+# Apply the new group membership to the current session
+# Note: For this change to take full effect, you may need to log out and log back in.
+newgrp docker
+Step 5: Load Docker Image from Archive (One-time Step)If you have a Docker image saved as a .tar file, you can load it into Docker's local image registry using this command. This is only necessary if you are not pulling the image from an online registry like Docker Hub.# Load the image from a .tar file
+docker load -i videosearchapi.tar
+Step 6: Running a GPU-Accelerated ContainerHere is an example command to run a Docker container with access to all host GPUs.Example Commanddocker run --gpus all --privileged \
+  -p 5800:5800 \
+  -v $(pwd)/new_dir2:/work_dir \
+  videosearchapi_v2 \
+  --batch_size 64 \
+  --working_dir /work_dir
+Command Breakdown--gpus all: Grants the container access to all available NVIDIA GPUs on the host.--privileged: Gives the container extended root capabilities. Use with caution.-p 5800:5800: Maps port 5800 on the host to port 5800 inside the container.-v $(pwd)/new_dir2:/work_dir: Mounts the new_dir2 directory from the current host directory into the /work_dir directory inside the container. This is useful for persistent data.videosearchapi_v2: The name of the Docker image to run.--batch_size 64 --working_dir /work_dir: These are arguments passed to the application running inside the container.
