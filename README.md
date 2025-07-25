@@ -125,13 +125,17 @@ docker run --gpus all --privileged \
   --batch_size 64 \
   --working_dir /work_dir
 ```
-Command Breakdown
---gpus all: Grants the container access to all available NVIDIA GPUs on the host.
---privileged: Gives the container extended root capabilities. Use with caution.
--p 5800:5800: Maps port 5800 on the host to port 5800 inside the container.
--v $(pwd)/new_dir2:/work_dir: Mounts the new_dir2 directory from the current host directory into the /work_dir directory inside the container. This is useful for persistent data.
-videosearchapi_v2: The name of the Docker image to run.
---batch_size 64 --working_dir /work_dir: These are arguments passed to the application running inside the container.
+## Command Breakdown
+
+* --gpus all: Grants the container access to all available NVIDIA GPUs on the host.
+* --privileged: Gives the container extended root capabilities. Use with caution.
+* -p 5800:5800: Maps port 5800 on the host to port 5800 inside the container.
+* -v $(pwd)/new_dir2:/work_dir: Mounts the new_dir2 directory from the current host directory into the /work_dir directory inside the container. This is useful for persistent data.
+* videosearchapi_v2: The name of the Docker image to run.
+* --batch_size 64
+* --working_dir /work_dir: 
+
+These are arguments passed to the application running inside the container.
 
 
 
