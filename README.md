@@ -118,12 +118,7 @@ docker load -i videosearchapi.tar
 # Step 6: Running a GPU-Accelerated Container
 Here is an example command to run Gyrus AI Docker container with access to all host GPUs.
 ```
-docker run --gpus all --privileged \
-  -p 5800:5800 \
-  -v /path/to/mounting_dir:/work_dir \
-  name_of_container \
-  --batch_size 64 \
-  --working_dir /work_dir
+docker run --gpus all --privileged -p 5800:5800  -v /path/to/mounting_dir:/work_dir name_of_container --batch_size 64 --working_dir /work_dir
 ```
 ## Command Breakdown
 
